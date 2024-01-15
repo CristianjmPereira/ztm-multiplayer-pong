@@ -1,6 +1,7 @@
 let readyPlayerCount = 0;
-function listen(io) {
-  io.on("connection", (socket) => {
+function listen(socketServer) {
+  const pongNamespace = socketServer.of("/pong");
+  pongNamespace.on("connection", (socket) => {
     console.log("User connected on server as: ", socket.id);
     socket.on("disconnect", (reason) => {
       console.log(`User disconnected: ${socket.id} with reason: ${reason}`);
@@ -13,7 +14,7 @@ function listen(io) {
 
       if (readyPlayerCount % 2 === 0) {
         console.log("Game starting");
-        io.emit("start", socket.id);
+        pongNamespace.emit("start", socket.id);
       }
     });
 
